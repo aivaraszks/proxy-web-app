@@ -1,0 +1,12 @@
+{
+  "name": "proxy-web-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local LAN page: email → deeplink with random user id",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
