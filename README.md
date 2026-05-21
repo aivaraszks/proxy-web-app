@@ -78,6 +78,24 @@ Placeholders:
 
 ---
 
+## Host on GitHub Pages (Source: GitHub Actions)
+
+1. Push this repository to GitHub.
+2. In the repo: **Settings** → **Pages** (under **Code and automation** in the left sidebar).
+3. Under **Build and deployment** → **Source**, select **GitHub Actions**.
+4. Commit and push the workflow file `.github/workflows/deploy-pages.yml` (it publishes the **`public/`** folder). Or go to **Actions** → workflow **“Deploy static site to Pages”** → **Run workflow**.
+
+After a successful run, **Settings** → **Pages** shows the site URL (usually `https://<username>.github.io/<repository>/`).
+
+**Notes**
+
+- You do **not** run `npm start` on GitHub; only files in **`public/`** are published.
+- Local testing is unchanged: `npm start` still serves the same **`public/`** folder.
+- If a run fails with permissions, try **Settings** → **Actions** → **General** → **Workflow permissions** → **Read and write** (only if GitHub suggests it).
+- The first time you deploy, GitHub may ask you to approve the **`github-pages`** environment (green **Review deployments** button on the workflow run).
+
+---
+
 ## Security note
 
-This is for **local development / demos** only. Do not expose it to the public internet without hardening (HTTPS, auth, rate limits, etc.).
+This is for **local development / demos** only. A GitHub Pages URL is **public**. Do not rely on this for secrets or production without hardening (HTTPS, auth, rate limits, etc.).
