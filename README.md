@@ -1,6 +1,6 @@
-# Local deeplink helper
+# Local proxy web app
 
-Run this on your PC. On your **phone** (same Wi‑Fi), you open the page in a browser, enter an email, and the page tries to open your **mobile app** using a **deeplink** (custom URL) that includes a **random user id**.
+Run this on your PC or on **GitHub Pages**. Enter a valid email and tap **Open app**; the link `href` is your app’s Matrix callback deep link (`com.seca.myanalytics://…`) with `code` and `state` for local debugging (same idea as `adb shell am start -a android.intent.action.VIEW -d "…"`).
 
 ---
 
@@ -9,7 +9,7 @@ Run this on your PC. On your **phone** (same Wi‑Fi), you open the page in a br
 ### 1. One-time setup on the PC
 
 1. Install [Node.js](https://nodejs.org/) 18 or newer if you do not have it.
-2. Edit `public/app.js` and set `DEEPLINK_TEMPLATE` to your real app URL scheme (see [Configure your deeplink](#configure-your-deeplink) below).
+2. Optional: edit `public/app.js` — `APP_DEEPLINK_BASE`, `CALLBACK_CODE`, and `CALLBACK_STATE` (see [Configure the Open app link](#configure-the-open-app-link) below).
 
 ### 2. Start the server on the PC
 
@@ -49,9 +49,8 @@ Use the **`http://<LAN-IP>:9280`** line that matches your normal Wi‑Fi or Ethe
 
 ### 6. Use the form and open the app
 
-1. Enter your email and tap **Open app**.
-2. The browser should switch to your installed app via the deeplink.
-3. If nothing happens, tap **“open in app”** on the page (some browsers require a user tap for custom URL schemes).
+1. Enter your email and tap **Open app** (navigates via `href` to `com.seca.myanalytics://myAnalytics/auth/matrix/callback?code=…&state=…`).
+2. Tap **Open Google** if you want the separate Google shortcut.
 
 Default port is **9280**. To use another port, then use that number in the phone URL:
 
@@ -64,17 +63,18 @@ Example phone URL: `http://192.168.1.50:5000`
 
 ---
 
-## Configure your deeplink
+## Configure the Open app link
 
-Edit `public/app.js` and set `DEEPLINK_TEMPLATE` to match what your app registers, for example:
+In `public/app.js`:
 
-- `mybrand://auth?userId={userId}&email={email}`
-- `mybrand://users/{userId}?email={email}`
+- **`APP_DEEPLINK_BASE`** — custom-scheme URL without query string (must match your Android intent filter / Capacitor config).
+- **`CALLBACK_CODE`** / **`CALLBACK_STATE`** — query values for local tests (defaults mirror `code=test&state=test` from adb).
 
-Placeholders:
+Example `href`:
 
-- `{userId}` — random id (UUID when the browser supports it).
-- `{email}` — URL-encoded email from the form.
+`com.seca.myanalytics://myAnalytics/auth/matrix/callback?code=test&state=test`
+
+The email field is still required before the link leaves `#` so you do not trigger the intent with an empty form by mistake. To pass the email into `state` (or another param), extend `buildOpenAppHref()` accordingly.
 
 ---
 

@@ -9,18 +9,13 @@
   <body>
     <main class="card">
       <h1>Continue in app</h1>
-      <p class="hint">Enter your email, then we open your app with a new user id in the link.</p>
+      <p class="hint">Enter your email, then tap Open app to fire the same kind of Android VIEW intent as your adb test (custom scheme).</p>
       <form id="form" novalidate>
         <label for="email">Email</label>
         <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
-        <button type="submit">Open app</button>
+        <a id="open-app" class="btn-primary" href="#" role="button">Open app</a>
       </form>
       <a class="btn-secondary" href="https://www.google.com/">Open Google</a>
-      <p id="status" class="status" hidden></p>
-      <p id="fallback" class="fallback" hidden>
-        If nothing happens, tap:
-        <a id="deeplink" href="#">open in app</a>
-      </p>
     </main>
     <script src="./app.js"></script>
   </body>
