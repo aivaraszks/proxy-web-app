@@ -1,5 +1,5 @@
 // * Matrix auth callback on the app (same URI shape as: adb shell am start -a VIEW -d "…" com.seca.myanalytics).
-const APP_DEEPLINK_BASE = "com.seca.myanalytics://myAnalytics/auth/matrix/callback";
+const APP_DEEPLINK_BASE = "com.seca.myanalytics://myAnalytics/auth/matrix/login/callback";
 
 // * OAuth-style query params for local debugging (edit to match your flow).
 const CALLBACK_CODE = "test";
