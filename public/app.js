@@ -4,6 +4,7 @@ const APP_DEEPLINK_BASE = "com.seca.myanalytics://myAnalytics/auth/matrix/login/
 // * OAuth-style query params for local debugging (edit to match your flow).
 const CALLBACK_CODE = "test";
 const CALLBACK_STATE = "test";
+const CALLBACK_ID_TOKEN = "some-id-token";
 
 /**
  * @returns {string}
@@ -12,6 +13,7 @@ function buildOpenAppHref() {
   const params = new URLSearchParams();
   params.set("code", CALLBACK_CODE);
   params.set("state", CALLBACK_STATE);
+  params.set("id_token", CALLBACK_ID_TOKEN);
   return `${APP_DEEPLINK_BASE}?${params.toString()}`;
 }
 
