@@ -24,6 +24,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Inject cache bust id
+        run: |
+          BUILD_ID="${GITHUB_SHA:0:12}"
+          sed -i "s/__BUILD_ID__/${BUILD_ID}/g" public/index.html
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

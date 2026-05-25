@@ -20,6 +20,36 @@ const MIME = {
   ".webp": "image/webp",
 };
 
+// * In-app browsers cache aggressively; disable caching for local dev.
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+  Pragma: "no-cache",
+  Expires: "0",
+};
+
+function assetBuildId(callback) {
+  const names = ["app.js", "styles.css"];
+  let pending = names.length;
+  let maxMtime = 0;
+
+  if (pending === 0) {
+    callback(String(Date.now()));
+    return;
+  }
+
+  for (const name of names) {
+    fs.stat(path.join(PUBLIC_DIR, name), (err, st) => {
+      if (!err && st.mtimeMs > maxMtime) {
+        maxMtime = st.mtimeMs;
+      }
+      pending -= 1;
+      if (pending === 0) {
+        callback(String(Math.floor(maxMtime || Date.now())));
+      }
+    });
+  }
+}
+
 function listLanIPv4() {
   const nets = os.networkInterfaces();
   const out = [];
@@ -55,7 +85,24 @@ const server = http.createServer((req, res) => {
     }
     const ext = path.extname(filePath).toLowerCase();
     const type = MIME[ext] || "application/octet-stream";
-    res.writeHead(200, { "Content-Type": type });
+    const cacheHeaders = [".html", ".js", ".css"].includes(ext) ? NO_CACHE_HEADERS : {};
+
+    if (ext === ".html") {
+      fs.readFile(filePath, "utf8", (readErr, content) => {
+        if (readErr) {
+          send(res, 500, "Internal Server Error");
+          return;
+        }
+        assetBuildId((buildId) => {
+          const html = content.replace(/__BUILD_ID__/g, buildId);
+          res.writeHead(200, { "Content-Type": type, ...cacheHeaders });
+          res.end(html);
+        });
+      });
+      return;
+    }
+
+    res.writeHead(200, { "Content-Type": type, ...cacheHeaders });
     fs.createReadStream(filePath).pipe(res);
   });
 });
